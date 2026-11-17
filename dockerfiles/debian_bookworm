@@ -11,7 +11,8 @@ RUN apt-get -y install apt-utils gcc \
     fakeroot dbus whiptail hexedit \
     patch wamerican ucf manpages \
     file luajit make lua5.3 dialog curl \
-    less cowsay netcat-openbsd git
+    less cowsay netcat-openbsd git \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN bash --version | head -1
 RUN useradd -m user && echo "user:password" | chpasswd
 RUN git clone --depth 1 https://github.com/AndrewMasker/Bashputer.git /home/user/Bashputer \
