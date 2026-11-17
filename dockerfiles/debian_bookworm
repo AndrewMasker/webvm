@@ -37,4 +37,4 @@ RUN echo 'root:password' | chpasswd
 # - Cartridge names are case-sensitive: the folder is src/Cartridges/Snake.
 # - Avoid '#', '&' and '\' in this line: the deploy workflow substitutes it into
 #   config_github_terminal.js with sed, using '#' as the delimiter.
-CMD [ "/bin/bash", "-c", "bash src/Computer/computer.sh Snake; exec bash --login" ]
+CMD [ "/bin/bash", "-c", "bash src/Computer/computer.sh Maze; exec bash --login" ]
