@@ -5,6 +5,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN echo "deb [trusted=yes] http://archive.debian.org/debian buster main contrib non-free" > /etc/apt/sources.list && \
     echo "deb [trusted=yes] http://archive.debian.org/debian-security buster/updates main" >> /etc/apt/sources.list
 
+RUN ls -l /etc/resolv.conf; cat /etc/resolv.conf; getent hosts archive.debian.org || echo "DNS LOOKUP FAILED"
+
 RUN apt-get clean && apt-get update && apt-get -y upgrade
 RUN apt-get -y install apt-utils gcc \
     python3 vim unzip ruby nodejs \
