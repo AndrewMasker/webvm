@@ -24,4 +24,10 @@ WORKDIR /home/user/Bashputer
 # We set env, as this gets extracted by Webvm. This is optional.
 ENV HOME="/home/user" TERM="xterm" USER="user" SHELL="/bin/bash" EDITOR="vim" LANG="C.UTF-8"
 RUN echo 'root:password' | chpasswd
-CMD [ "/bin/bash", "-c" ] #, "./src/run.sh snake" ]
+# Start Snake when the VM boots, then drop into a login shell once the game exits.
+# - Runs computer.sh directly instead of src/run.sh: run.sh needs bwrap (not installed) and
+#   `env --default-signal` (coreutils 8.31+, Buster has 8.30). The VM is already a sandbox.
+# - Cartridge names are case-sensitive: the folder is src/Cartridges/Snake.
+# - Avoid '#', '&' and '\' in this line: the deploy workflow substitutes it into
+#   config_github_terminal.js with sed, using '#' as the delimiter.
+CMD [ "/bin/bash", "-c", "bash src/Computer/computer.sh Snake; exec bash --login" ]
