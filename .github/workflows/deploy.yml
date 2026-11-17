@@ -89,7 +89,11 @@ jobs:
 
   build:
     needs: guard_clause # Dependency
-    runs-on: ubuntu-latest # Image to run the worker on.
+    # Pinned to ubuntu-24.04: on the ubuntu-26.04 image (what ubuntu-latest now points to),
+    # Docker 29.4.2's default seccomp profile blocks the socketcall syscall that 32-bit glibc
+    # uses for networking, so DNS fails inside i386 containers and apt-get can't fetch packages.
+    # This can go back to ubuntu-latest once the runner image ships Docker 29.4.3 or later.
+    runs-on: ubuntu-24.04
 
     env:
       TAG: "ext2-webvm-base-image" # Tag of docker image.
@@ -113,7 +117,7 @@ jobs:
       - run: sudo mkdir -p $DEPLOY_DIR
 
       # Build the i386 Dockerfile image.
-      - run: docker build . --network host --tag $TAG --file ${{ github.event.inputs.DOCKERFILE_PATH }} --platform=i386
+      - run: docker build . --tag $TAG --file ${{ github.event.inputs.DOCKERFILE_PATH }} --platform=i386
       
       # Run the docker image so that we can export the container.
       # Run the Docker container with the Google Public DNS nameservers: 8.8.8.8, 8.8.4.4
