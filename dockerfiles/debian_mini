@@ -15,7 +15,7 @@ RUN apt-get -y install apt-utils gcc \
     file luajit make lua5.3 dialog curl \
     less cowsay netcat-openbsd git
 RUN useradd -m user && echo "user:password" | chpasswd
-Run git clone --depth 1 git@github.com:AndrewMasker/Bashputer.git /home/user/Bashputer \
+RUN git clone --depth 1 git@github.com:AndrewMasker/Bashputer.git /home/user/Bashputer \
 && chown -R user:user /home/user/Bashputer
 COPY --chown=user:user ./examples /home/user/examples
 RUN chmod -R +x  /home/user/examples/lua
