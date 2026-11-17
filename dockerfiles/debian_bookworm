@@ -14,6 +14,13 @@ RUN apt-get -y install apt-utils gcc \
     less cowsay netcat-openbsd git \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN bash --version | head -1
+# mkfifo replacement: Bookworm's mkfifo uses the mknodat syscall, which CheerpX doesn't
+# implement ("Function not implemented"). This one uses mknod, which works. /usr/local/bin is
+# ahead of /usr/bin in PATH, so scripts calling `mkfifo` pick it up.
+COPY dockerfiles/mkfifo_mknod.c /tmp/mkfifo_mknod.c
+RUN gcc -O2 -o /usr/local/bin/mkfifo /tmp/mkfifo_mknod.c && rm /tmp/mkfifo_mknod.c \
+    && mkfifo /tmp/fifo_check && test -p /tmp/fifo_check && rm /tmp/fifo_check \
+    && command -v mkfifo
 RUN useradd -m user && echo "user:password" | chpasswd
 RUN git clone --depth 1 https://github.com/AndrewMasker/Bashputer.git /home/user/Bashputer \
 && chown -R user:user /home/user/Bashputer
