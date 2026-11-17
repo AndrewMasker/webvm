@@ -1,0 +1,33 @@
+# Debian Bookworm image for Bashputer.
+# Bookworm instead of Buster because bash 5.0 (Buster) implements `read -t` timeouts with
+# SIGALRM, and signal handlers never run under WebVM's CheerpX, so the timeouts never fire.
+# bash 5.2 (Bookworm) implements them with pselect(), which works in CheerpX.
+FROM --platform=linux/386 docker.io/i386/debian:bookworm
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get clean && apt-get update && apt-get -y upgrade
+RUN apt-get -y install apt-utils gcc \
+    python3 vim unzip ruby nodejs \
+    fakeroot dbus whiptail hexedit \
+    patch wamerican ucf manpages \
+    file luajit make lua5.3 dialog curl \
+    less cowsay netcat-openbsd git \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN bash --version | head -1
+RUN useradd -m user && echo "user:password" | chpasswd
+RUN git clone --depth 1 https://github.com/AndrewMasker/Bashputer.git /home/user/Bashputer \
+&& chown -R user:user /home/user/Bashputer
+COPY --chown=user:user ./examples /home/user/examples
+RUN chmod -R +x  /home/user/examples/lua
+# We set WORKDIR, as this gets extracted by Webvm to be used as the cwd. This is optional.
+WORKDIR /home/user/Bashputer
+# We set env, as this gets extracted by Webvm. This is optional.
+ENV HOME="/home/user" TERM="xterm" USER="user" SHELL="/bin/bash" EDITOR="vim" LANG="C.UTF-8"
+RUN echo 'root:password' | chpasswd
+# Start Snake when the VM boots, then drop into a login shell once the game exits.
+# - Runs computer.sh directly instead of src/run.sh: run.sh needs bwrap, which isn't installed
+#   and relies on kernel namespaces CheerpX is unlikely to support. The VM is already a sandbox.
+# - Cartridge names are case-sensitive: the folder is src/Cartridges/Snake.
+# - Avoid '#', '&' and '\' in this line: the deploy workflow substitutes it into
+#   config_github_terminal.js with sed, using '#' as the delimiter.
+CMD [ "/bin/bash", "-c", "bash src/Computer/computer.sh Snake; exec bash --login" ]
