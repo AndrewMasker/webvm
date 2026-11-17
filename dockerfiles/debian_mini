@@ -15,11 +15,13 @@ RUN apt-get -y install apt-utils gcc \
     file luajit make lua5.3 dialog curl \
     less cowsay netcat-openbsd git
 RUN useradd -m user && echo "user:password" | chpasswd
+Run git clone --depth 1 git@github.com:AndrewMasker/Bashputer.git /home/user/Bashputer \
+&& chown -R user:user /home/user/Bashputer
 COPY --chown=user:user ./examples /home/user/examples
 RUN chmod -R +x  /home/user/examples/lua
 # We set WORKDIR, as this gets extracted by Webvm to be used as the cwd. This is optional.
-WORKDIR /home/user/
+WORKDIR /home/user/Bashputer
 # We set env, as this gets extracted by Webvm. This is optional.
 ENV HOME="/home/user" TERM="xterm" USER="user" SHELL="/bin/bash" EDITOR="vim" LANG="C.UTF-8"
 RUN echo 'root:password' | chpasswd
-CMD [ "/bin/bash" ]
+CMD [ "/bin/bash", "-c", "./src.run.sh snake" ]
