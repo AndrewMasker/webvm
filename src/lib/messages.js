@@ -2,30 +2,7 @@ const color = "\x1b[1;35m";
 const underline = "\x1b[94;4m";
 const normal = "\x1b[0m";
 export const introMessage = [
-  "+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+",
-  "|                                                                             |",
-  "| WebVM is a virtual Linux environment running in the browser via WebAssembly.|",
-  "|                                                                             |",
-  "| WebVM is powered by the CheerpX virtualization engine, which enables safe,  |",
-  "| sandboxed execution of x86 binaries, fully client-side.                     |",
-  "|                                                                             |",
-  "| CheerpX includes an x86-to-WebAssembly JIT compiler, a virtual block-based  |",
-  "| file system, and a Linux syscall emulator.                                  |",
-  "|                                                                             |",
-  "| Try out the new Alpine / Xorg / i3 WebVM: " + underline + "https://webvm.io/alpine.html" + normal + "      |",
-  "|                                                                             |",
-  "| [News] BrowserPod 4.0: the microVM in the browser, now free for any use     |",
-  "| " + underline + "https://browserpod.io/blog/browserpod-40/" + normal + "                                   |",
-  "|                                                                             |",
-  "+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+",
-  "",
-  "   Welcome to WebVM. If unsure, try these examples:",
-  "",
-  "     python3 examples/python3/fibonacci.py ",
-  "     gcc -o helloworld examples/c/helloworld.c && ./helloworld",
-  "     objdump -d ./helloworld | less -M",
-  "     vim examples/c/helloworld.c",
-  "     curl --max-time 15 parrot.live  # requires networking",
+  "Please wait. Startup takes ~30 seconds.",
   "",
 ];
 export const errorMessage = [
